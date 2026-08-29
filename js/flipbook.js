@@ -1,50 +1,41 @@
 $(function() {
-    // Get the total number of images
-    const imageCount = 12; // CHANGE THIS to match your page count!
+    const imageCount = 12;
+    let currentPage = 1;
     
-    // Build the flipbook HTML
-    let flipbookHTML = '';
+    // Build the gallery
+    let galleryHTML = '';
     for (let i = 1; i <= imageCount; i++) {
-        flipbookHTML += `<div class="page"><img src="pages/page-${i}.jpg" alt="Page ${i}"></div>`;
+        const display = i === 1 ? 'block' : 'none';
+        galleryHTML += `<div class="gallery-page" style="display: ${display}"><img src="pages/page-${i}.jpg" alt="Page ${i}"></div>`;
     }
     
-    $('#flipbook').html(flipbookHTML);
+    $('#flipbook').html(galleryHTML);
+    $('#totalPages').text(imageCount);
     
-    // Initialize the flipbook
-    $('#flipbook').turn({
-        width: 900,
-        height: 600,
-        autoCenter: true,
-        display: 'double',
-        acceleration: true,
-        gradients: true,
-        elevation: 50,
-        when: {
-            turned: function(e, page) {
-                updatePageNumber(page);
-            }
-        }
-    });
-    
-    // Update page counter
-    function updatePageNumber(page) {
-        $('#pageNumber').html(`Pages ${page}-${page + 1} of <span id="totalPages">${imageCount}</span>`);
+    // Update page display
+    function showPage(page) {
+        if (page < 1) page = 1;
+        if (page > imageCount) page = imageCount;
+        
+        $('.gallery-page').hide();
+        $('.gallery-page').eq(page - 1).show();
+        
+        $('#pageNumber').html(`Page ${page} of <span id="totalPages">${imageCount}</span>`);
+        currentPage = page;
     }
-    
-    updatePageNumber(1);
     
     // Button controls
     $('#prevBtn').click(function() {
-        $('#flipbook').turn('previous');
+        showPage(currentPage - 1);
     });
     
     $('#nextBtn').click(function() {
-        $('#flipbook').turn('next');
+        showPage(currentPage + 1);
     });
     
     // Keyboard controls
     $(document).keydown(function(e) {
-        if (e.keyCode == 37) $('#flipbook').turn('previous');
-        if (e.keyCode == 39) $('#flipbook').turn('next');
+        if (e.keyCode == 37) showPage(currentPage - 1); // Left arrow
+        if (e.keyCode == 39) showPage(currentPage + 1); // Right arrow
     });
 });
