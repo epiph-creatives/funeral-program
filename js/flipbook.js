@@ -37,3 +37,14 @@ $(function() {
     $('#prevBtn').click(function() {
         $('#flipbook').turn('previous');
     });
+    
+    $('#nextBtn').click(function() {
+        $('#flipbook').turn('next');
+    });
+    
+    // Keyboard controls
+    $(document).keydown(function(e) {
+        if (e.keyCode == 37) $('#flipbook').turn('previous');
+        if (e.keyCode == 39) $('#flipbook').turn('next');
+    });
+});
